@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { getPool } from "./database";
+import { getPool } from "../database";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10");

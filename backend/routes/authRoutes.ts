@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
-import { createUser, getUserByEmail, verifyPassword } from "./userService";
-import { generateToken } from "./jwt.service";
+import { createUser, getUserByEmail, verifyPassword } from "../services/userService";
+import { generateToken } from "../jwt.service";
 
 const router = Router();
 

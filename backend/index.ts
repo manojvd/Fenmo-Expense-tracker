@@ -2,7 +2,9 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { initializeDatabase } from "./database";
-import authRoutes from "./authRoutes";
+import authRoutes from "./routes/authRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
+import expenseRoutes from "./routes/expenseRoutes";
 import { authMiddleware } from "./middleware/auth.middleware";
 
 // Load environment variables
@@ -20,8 +22,10 @@ app.use(cors({
 app.use(express.json());
 
 
-// Auth routes
+// Routes
 app.use("/auth", authRoutes);
+app.use("/categories", categoryRoutes);
+app.use("/expenses", expenseRoutes);
 
 // Initialize database and start server
 async function startServer() {

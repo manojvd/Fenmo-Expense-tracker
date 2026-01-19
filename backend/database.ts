@@ -37,8 +37,10 @@ export async function initializeDatabase(): Promise<void> {
       queueLimit: 0,
     });
 
-    // Create users table
+    // Create tables
     await createUsersTable();
+    await createCategoriesTable();
+    await createExpensesTable();
 
     console.log("Database initialization complete");
   } catch (error) {
@@ -64,6 +66,52 @@ async function createUsersTable(): Promise<void> {
     console.log("Users table created or already exists");
   } catch (error) {
     console.error("Error creating users table:", error);
+    throw error;
+  }
+}
+
+async function createCategoriesTable(): Promise<void> {
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS categories (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      user_id INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `;
+
+  try {
+    await pool.execute(createTableQuery);
+    console.log("Categories table created or already exists");
+  } catch (error) {
+    console.error("Error creating categories table:", error);
+    throw error;
+  }
+}
+
+async function createExpensesTable(): Promise<void> {
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS expenses (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      amount DECIMAL(10, 2) NOT NULL,
+      category_id INT NOT NULL,
+      description VARCHAR(500),
+      date DATE NOT NULL,
+      user_id INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `;
+
+  try {
+    await pool.execute(createTableQuery);
+    console.log("Expenses table created or already exists");
+  } catch (error) {
+    console.error("Error creating expenses table:", error);
     throw error;
   }
 }
