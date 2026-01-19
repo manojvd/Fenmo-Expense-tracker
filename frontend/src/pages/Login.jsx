@@ -138,7 +138,7 @@ const Login = () => {
                 </div>
 
                 <p className="text-center mt-8 text-slate-500 text-sm">
-                    © 2024 Fenmo. Secure and Private.
+                    © 2026 Fenmo. Secure and Private.
                 </p>
             </div>
         </div>
