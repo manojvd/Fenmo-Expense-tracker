@@ -1,0 +1,166 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import authService from '../services/authService';
+
+const Signup = () => {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        terms: false
+    });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        const { id, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [id]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (!formData.terms) {
+            setError('Please agree to the Terms of Service');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await authService.signup({
+                name: formData.name,
+                email: formData.email,
+                password: formData.password
+            });
+            navigate('/'); // Redirect to dashboard after signup
+        } catch (err) {
+            setError(err.message || 'Signup failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="relative flex items-center justify-center min-h-screen mesh-gradient overflow-hidden">
+            {/* Animated Background Elements */}
+            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-primary/20 rounded-full blur-[120px] animate-float"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-secondary/20 rounded-full blur-[120px] animate-float-delayed"></div>
+
+            <div className="relative z-10 w-full max-w-md px-4 py-12">
+                <div className="glass p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/40">
+                    <div className="flex flex-col items-center mb-10">
+                        <div className="w-16 h-16 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center shadow-lg mb-4 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                            </svg>
+                        </div>
+                        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">Join Fenmo</h1>
+                        <p className="text-slate-500 mt-2 font-medium">Start tracking your wealth today.</p>
+                    </div>
+
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl flex items-start gap-3">
+                            <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {error}
+                        </div>
+                    )}
+
+                    <form className="space-y-5" onSubmit={handleSubmit}>
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 mb-2 ml-1" htmlFor="name">Full Name</label>
+                            <input
+                                id="name"
+                                type="text"
+                                placeholder="John Doe"
+                                className="input-field"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 mb-2 ml-1" htmlFor="email">Email Address</label>
+                            <input
+                                id="email"
+                                type="email"
+                                placeholder="john@example.com"
+                                className="input-field"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 mb-2 ml-1" htmlFor="password">Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                placeholder="••••••••"
+                                className="input-field"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="flex items-center space-x-2 ml-1 pb-2">
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary border-slate-300"
+                                checked={formData.terms}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="terms" className="text-xs text-slate-500">I agree to the <a href="#" className="text-brand-primary font-semibold">Terms of Service</a></label>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="btn-primary w-full group disabled:opacity-70 disabled:cursor-not-allowed"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <span className="flex items-center justify-center gap-2">
+                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Creating Account...
+                                </span>
+                            ) : (
+                                <>
+                                    Create Account
+                                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </>
+                            )}
+                        </button>
+
+                        <div className="relative py-4">
+                            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
+                            <div className="relative flex justify-center text-xs uppercase"><span className="bg-transparent px-2 text-slate-400 font-medium tracking-wider">Already have an account?</span></div>
+                        </div>
+
+                        <Link
+                            to="/login"
+                            className="w-full flex items-center justify-center px-6 py-3 border-2 border-slate-200 rounded-xl text-slate-700 font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all duration-300"
+                        >
+                            Log In Instead
+                        </Link>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Signup;
+

@@ -1,47 +1,31 @@
-import { useState } from 'react';
-import Login from './components/Login';
-import Register from './components/Register';
-import Dashboard from './components/Dashboard';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import { useState, useEffect } from 'react';
+import './App.css'
 
 function App() {
-  const [view, setView] = useState('login'); // 'login', 'register', 'dashboard'
-  const [user, setUser] = useState(null);
 
-  const handleLoginSuccess = (data) => {
-    setUser({ id: data.id, name: data.name });
-    setView('dashboard');
-  };
+  const [token, setToken] = useState(null);
 
-  const handleRegisterSuccess = (data) => {
-    // After registration, redirect to login
-    setView('login');
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setView('login');
-  };
-
-  if (view === 'dashboard' && user) {
-    return <Dashboard user={user} onLogout={handleLogout} />;
-  }
-
-  if (view === 'register') {
-    return (
-      <Register
-        onRegisterSuccess={handleRegisterSuccess}
-        onSwitchToLogin={() => setView('login')}
-      />
-    );
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setToken(JSON.parse(token));
+    }
+  }, [localStorage]);
 
   return (
-    <Login
-      onLoginSuccess={handleLoginSuccess}
-      onSwitchToRegister={() => setView('register')}
-    />
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
