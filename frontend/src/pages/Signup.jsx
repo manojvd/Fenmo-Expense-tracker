@@ -37,7 +37,7 @@ const Signup = () => {
                 email: formData.email,
                 password: formData.password
             });
-            navigate('/'); // Redirect to dashboard after signup
+            navigate('/dashboard');
         } catch (err) {
             setError(err.message || 'Signup failed. Please try again.');
         } finally {
