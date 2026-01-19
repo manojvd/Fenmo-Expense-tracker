@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { initializeDatabase } from "./database";
 import authRoutes from "./authRoutes";
+import { authMiddleware } from "./middleware/auth.middleware";
 
 // Load environment variables
 dotenv.config();
@@ -18,9 +19,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World - Fenmo Expense Tracker API");
-});
 
 // Auth routes
 app.use("/auth", authRoutes);

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { createUser, getUserByEmail, verifyPassword } from "./userService";
+import { generateToken } from "./jwt.service";
 
 const router = Router();
 
@@ -20,7 +21,8 @@ router.post("/signup", async (req: Request, res: Response) => {
     }
 
     const userId = await createUser(name, email, password);
-    res.status(201).json({ user: {id: userId, name: name, email: email}, token: "1234567890" });
+    const token = generateToken({ id: userId, email: email });
+    res.status(201).json({ user: {id: userId, name: name, email: email}, token: token });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -48,7 +50,8 @@ router.post("/login", async (req: Request, res: Response) => {
       return;
     }
 
-    res.json({ user: {id: user.id, name: user.name, email: user.email} , token: "1234567890" });
+    const token = generateToken({ id: user.id, email: user.email });
+    res.json({ user: {id: user.id, name: user.name, email: user.email} , token: token });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "Internal server error" });
