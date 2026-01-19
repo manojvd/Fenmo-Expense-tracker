@@ -4,6 +4,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import { useState, useEffect } from 'react';
 import './App.css'
+import OfflineBanner from './components/OfflineBanner';
 
 function App() {
 
@@ -12,12 +13,13 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setToken(JSON.parse(token));
+      setToken(token);
     }
   }, [localStorage]);
 
   return (
     <BrowserRouter>
+    <OfflineBanner/>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

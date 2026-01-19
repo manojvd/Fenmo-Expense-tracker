@@ -40,13 +40,13 @@ router.post("/login", async (req: Request, res: Response) => {
 
     const user = await getUserByEmail(email);
     if (!user) {
-      res.status(401).json({ error: "Invalid credentials" });
+      res.status(400).json({ error: "Invalid credentials" });
       return;
     }
 
     const isValidPassword = await verifyPassword(password, user.password);
     if (!isValidPassword) {
-      res.status(401).json({ error: "Invalid credentials" });
+      res.status(400).json({ error: "Invalid credentials" });
       return;
     }
 
