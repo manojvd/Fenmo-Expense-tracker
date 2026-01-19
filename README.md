@@ -12,8 +12,9 @@ A modern expense tracking application with visual analytics and category-based o
 
 ## 🎥 Demo
 
-<video src="readme-assert/demo-video.webm" controls></video>
+[JAM Video URL](https://jam.dev/c/cc47fa4e-3ab9-4337-b66e-9bf25ba09224?startFrom=0.00)
 
+### Video Files in readme-assert/demo-video.webm
 ---
 
 ## 📸 Screenshots
